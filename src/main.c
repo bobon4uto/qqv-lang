@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include "tokinizer.h"
+#include <stdio.h>
 #define VUPS_IMPLEMENTATION
 #include "vups.h"
 #if false
@@ -12,6 +12,10 @@ a = a+1;
 }
 #endif
 
+void l_error_unexpected_expected(Tokenizer * t,Token unexpected,Token expected) {
+  printf("examples/hello.qq:%zu:%zu: expected %s, found %s\n", t_to_y(t), t_to_x(t), token_incode_str(expected),token_incode_str(unexpected));
+  exit(1);
+}
 int main(int argc, char **argv) {
   (void)(argc);
   (void)(argv);
@@ -19,29 +23,29 @@ int main(int argc, char **argv) {
   read_file(sh, argv[1]);
   String_Variable_Slice svs_src = svs_link_full(sh);
   (void)svs_src;
-  //String_Variable_Slice_Vector svs_v = svs_split( svs_link_full(sh), '\n');
-  //for (size_t i = 0; i< svs_v.count; ++i) {
-  //  printf("[");
-  //  svs_print(svs_v.items[i]);
-  //  printf("]\n");
-  //}
-  //v_free(&svs_v);
+  // String_Variable_Slice_Vector svs_v = svs_split( svs_link_full(sh), '\n');
+  // for (size_t i = 0; i< svs_v.count; ++i) {
+  //   printf("[");
+  //   svs_print(svs_v.items[i]);
+  //   printf("]\n");
+  // }
+  // v_free(&svs_v);
   PTR(Tokenizer, t);
   t->svs = svs_src;
   Token token = TOKEN_END;
+  Token prev_token = TOKEN_END;
   do {
     token = t_current(t);
-    if (token_important(token)) {
-      printf("examples/hello.qq:%zu:%zu: %s\n", t_to_y(t),t_to_x(t),token_str(token));
+    if (prev_token== TOKEN_FUNCTION) {
+      if (token != TOKEN_IDENTIFIER) {
+        l_error_unexpected_expected(t, token, TOKEN_FUNCTION);
+      }
     }
+    //printf("examples/hello.qq:%zu:%zu: %s\n", t_to_y(t), t_to_x(t),
+    //       token_str(token));
+    printf("%s", token_incode_str(token));
     t_next(t);
-  } while (token!=TOKEN_END);
-
-     //printf("%s",token_incode_str(token));
-     //printf("%s -> %s\n",token_str(token),token_incode_str(token));
-     //printf("%s -> %s\n",token_str(token), token_incode_str(token));
-     //printf("%s",token_incode_str(token));
-
-  //printf("%s", sh_c_str(sh));
+    prev_token = token;
+  } while (token != TOKEN_END);
   return 0;
 }

@@ -1,30 +1,6 @@
 #include "vups.h"
+#include "tokinizer.def.h"
 //last match gets priority
-#define                        STATIC_TOKENS(T)   \
-  T(TOKEN_VARIABLE,            "var"            ) \
-  T(TOKEN_RETURN,              "return"         ) \
-  T(TOKEN_FUNCTION,            "fn"             ) \
-  T(TOKEN_BRACKET_OPEN,        "("              ) \
-  T(TOKEN_BRACKET_CLOSE,       ")"              ) \
-  T(TOKEN_CURLY_BRACKET_OPEN,  "{"              ) \
-  T(TOKEN_CURLY_BRACKET_CLOSE, "}"              ) \
-  T(TOKEN_COLUMN,              ":"              ) \
-  T(TOKEN_SEMICOLUMN,          ";"              ) \
-  T(TOKEN_EQUALS,              "="              ) \
-  T(TOKEN_EQUALS_EQUALS,       "=="             ) \
-  T(TOKEN_PLUS,                "+"              ) \
-  T(TOKEN_MINUS,               "-"              ) \
-  T(TOKEN_FORWARD_SLASH,       "/"              ) \
-  T(TOKEN_BACKWARD_SLASH,      "\\"             ) \
-
-#define                        TOKENS(T)          \
-  T(TOKEN_NOT_IMPORTANT,       "$NOT_IMPORTANT" ) \
-  STATIC_TOKENS(T)                                \
-  T(TOKEN_IDENTIFIER,          "$ID"            ) \
-  T(TOKEN_NUMBER,              "$0"             ) \
-  T(TOKEN_STRING,              "$<str>"         ) \
-  T(TOKEN_COMMENT,             "$`"             ) \
-  T(TOKEN_END,                 "$end"           ) \
 
 #define TOK_ENUM_FIELD(TOKEN,_) TOKEN,
 typedef enum {
@@ -44,11 +20,11 @@ typedef struct Tokenizer {
 } Tokenizer;
 Token t_current(Tokenizer* t);
 
-bool one_of(char c, char* test);
+bool one_of(char c, const char* test);
 
-bool is_comment_start(char c);
+size_t is_comment_start(char* s);
 
-bool is_comment_end(char c);
+size_t is_comment_end(char* s);
 
 bool is_string_start(char c);
 bool is_string_end(char c);

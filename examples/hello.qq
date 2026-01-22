@@ -1,9 +1,13 @@
+type Int : int;
+type Array : Int[];
+q
+var fn_is:bool = true;
 fn main () : int {
   
   var a : int = 5;
   a = a+1;
   a == a+1;
-  print(<qq!!>);
+  print("hello, " + <<mister "world"!>>);
   123
 }
-`this is a comment
+//this is a comment
